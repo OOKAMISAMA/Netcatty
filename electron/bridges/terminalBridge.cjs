@@ -863,12 +863,30 @@ function getWslLaunchArgs(shellPath, shellArgs, hasExplicitCwd) {
   // mounted or accessible to the selected distro). Start at Linux $HOME unless
   // the caller deliberately supplied a working directory or --cd option.
   if (
-    isWslExecutable(shellPath) &&
-    !hasExplicitCwd &&
-    !args.some((arg) => arg === "--cd" || arg.startsWith("--cd="))
+    !isWslExecutable(shellPath) ||
+    hasExplicitCwd ||
+    args.some((arg) => arg === "--cd" || arg.startsWith("--cd="))
   ) {
-    args.push("--cd", "~");
+    return args;
   }
+
+  // The tokens following --exec/-e, or the first bare command, are passed to
+  // Linux verbatim. Account for WSL options with a separate value before
+  // locating that boundary, then insert --cd before it rather than accidentally
+  // passing --cd to the shell or command.
+  let commandIndex = -1;
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--exec" || arg === "-e" || !arg.startsWith("-")) {
+      commandIndex = index;
+      break;
+    }
+    if (arg === "--distribution" || arg === "-d" || arg === "--user" || arg === "-u") {
+      index += 1;
+    }
+  }
+  const insertAt = commandIndex === -1 ? args.length : commandIndex;
+  args.splice(insertAt, 0, "--cd", "~");
   return args;
 }
 

@@ -113,6 +113,14 @@ test("WSL launch arguments use Linux home unless a working directory is explicit
       bridge.getWslLaunchArgs("C:\\Windows\\System32\\wsl.exe", ["-d", "Ubuntu"], true),
       ["-d", "Ubuntu"],
     );
+    assert.deepEqual(
+      bridge.getWslLaunchArgs(
+        "C:\\Windows\\System32\\wsl.exe",
+        ["-d", "Ubuntu", "--exec", "zsh", "-l"],
+        false,
+      ),
+      ["-d", "Ubuntu", "--cd", "~", "--exec", "zsh", "-l"],
+    );
   } finally {
     Object.defineProperty(process, "platform", platformDescriptor);
   }
