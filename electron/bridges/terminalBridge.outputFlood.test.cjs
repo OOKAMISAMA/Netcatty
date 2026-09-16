@@ -99,6 +99,25 @@ function loadBridgeWithFakes(spawns, sentries) {
   }
 }
 
+test("WSL launch arguments use Linux home unless a working directory is explicit", () => {
+  const bridge = loadBridgeWithFakes([], []);
+  const platformDescriptor = Object.getOwnPropertyDescriptor(process, "platform");
+
+  try {
+    Object.defineProperty(process, "platform", { ...platformDescriptor, value: "win32" });
+    assert.deepEqual(
+      bridge.getWslLaunchArgs("C:\\Windows\\System32\\wsl.exe", ["-d", "Ubuntu"], false),
+      ["-d", "Ubuntu", "--cd", "~"],
+    );
+    assert.deepEqual(
+      bridge.getWslLaunchArgs("C:\\Windows\\System32\\wsl.exe", ["-d", "Ubuntu"], true),
+      ["-d", "Ubuntu"],
+    );
+  } finally {
+    Object.defineProperty(process, "platform", platformDescriptor);
+  }
+});
+
 test("Windows local terminals enable the bundled ConPTY implementation required for clear", () => {
   const spawns = [];
   const sentries = [];

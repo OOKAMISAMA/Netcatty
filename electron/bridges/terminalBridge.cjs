@@ -851,6 +851,27 @@ function getLocalShellArgs(shellPath) {
   return [];
 }
 
+function isWslExecutable(shellPath) {
+  if (process.platform !== "win32" || typeof shellPath !== "string") return false;
+  return /(?:^|[\\/])wsl(?:\.exe)?$/i.test(shellPath.trim());
+}
+
+function getWslLaunchArgs(shellPath, shellArgs, hasExplicitCwd) {
+  const args = Array.isArray(shellArgs) ? [...shellArgs] : [];
+  // Without --cd, wsl.exe translates the parent Windows cwd. That can fail
+  // before the Linux shell starts (for example, when the Windows home is not
+  // mounted or accessible to the selected distro). Start at Linux $HOME unless
+  // the caller deliberately supplied a working directory or --cd option.
+  if (
+    isWslExecutable(shellPath) &&
+    !hasExplicitCwd &&
+    !args.some((arg) => arg === "--cd" || arg.startsWith("--cd="))
+  ) {
+    args.push("--cd", "~");
+  }
+  return args;
+}
+
 const isUtf8Locale = (value) => typeof value === "string" && /utf-?8/i.test(value);
 
 const isEmptyLocale = (value) => {
@@ -896,7 +917,12 @@ function startLocalSession(event, payload) {
     }
   }
   const shell = normalizeExecutablePath(resolvedShell) || defaultShell;
-  const shellArgs = resolvedArgs ?? getLocalShellArgs(shell);
+  const requestedCwd = typeof payload?.cwd === "string" && payload.cwd.trim().length > 0;
+  const shellArgs = getWslLaunchArgs(
+    shell,
+    resolvedArgs ?? getLocalShellArgs(shell),
+    requestedCwd,
+  );
   const shellKind = detectShellKind(shell);
   const { buildTerminalProcessEnv } = require("./httpNetworkProxyBridge.cjs");
   const env = applyLocaleDefaults({
@@ -2536,6 +2562,7 @@ module.exports = {
   registerHandlers,
   findExecutable,
   getDefaultLocalShell,
+  getWslLaunchArgs,
   startLocalSession,
   startTelnetSession,
   startMoshSession,
