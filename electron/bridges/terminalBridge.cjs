@@ -862,17 +862,21 @@ function getWslLaunchArgs(shellPath, shellArgs, hasExplicitCwd) {
   // before the Linux shell starts (for example, when the Windows home is not
   // mounted or accessible to the selected distro). Start at Linux $HOME unless
   // the caller deliberately supplied a working directory or --cd option.
-  // WSL also accepts a leading ~ as its legacy home-directory shorthand.
-  if (!isWslExecutable(shellPath) || hasExplicitCwd || args[0] === "~") {
+  if (!isWslExecutable(shellPath) || hasExplicitCwd) {
     return args;
   }
+
+  // WSL consumes an optional legacy distro GUID, then a home-directory ~,
+  // before parsing normal options. Keep both in their original positions.
+  const firstOptionIndex = /^\{?[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\}?$/i.test(args[0] || "") ? 1 : 0;
+  if (args[firstOptionIndex] === "~") return args;
 
   // The tokens following --/--exec/-e, or the first bare command, are passed to
   // Linux verbatim. Account for WSL options with a separate value before
   // locating that boundary, then insert --cd before it rather than accidentally
   // passing --cd to the shell or command.
   let commandIndex = -1;
-  for (let index = 0; index < args.length; index += 1) {
+  for (let index = firstOptionIndex; index < args.length; index += 1) {
     const arg = args[index];
     if (arg === "--" || arg === "--exec" || arg === "-e" || !arg.startsWith("-")) {
       commandIndex = index;

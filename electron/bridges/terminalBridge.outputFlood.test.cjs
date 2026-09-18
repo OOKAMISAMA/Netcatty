@@ -129,7 +129,11 @@ test("WSL launch arguments use Linux home unless a working directory is explicit
 test("WSL default directory stays outside the Linux command and option values", () => {
   const bridge = loadBridgeWithFakes([], []);
   const platformDescriptor = Object.getOwnPropertyDescriptor(process, "platform");
+  const distroGuid = "{01234567-89ab-cdef-0123-456789abcdef}";
   const cases = [
+    [[distroGuid], [distroGuid, "--cd", "~"]],
+    [[distroGuid, "~"], [distroGuid, "~"]],
+    [[distroGuid, "--", "zsh"], [distroGuid, "--cd", "~", "--", "zsh"]],
     [["~"], ["~"]],
     [["~", "-d", "Ubuntu", "--", "zsh"], ["~", "-d", "Ubuntu", "--", "zsh"]],
     [["-d", "Ubuntu", "--", "zsh", "-l"], ["-d", "Ubuntu", "--cd", "~", "--", "zsh", "-l"]],
