@@ -862,26 +862,29 @@ function getWslLaunchArgs(shellPath, shellArgs, hasExplicitCwd) {
   // before the Linux shell starts (for example, when the Windows home is not
   // mounted or accessible to the selected distro). Start at Linux $HOME unless
   // the caller deliberately supplied a working directory or --cd option.
-  if (
-    !isWslExecutable(shellPath) ||
-    hasExplicitCwd ||
-    args.some((arg) => arg === "--cd" || arg.startsWith("--cd="))
-  ) {
+  // WSL also accepts a leading ~ as its legacy home-directory shorthand.
+  if (!isWslExecutable(shellPath) || hasExplicitCwd || args[0] === "~") {
     return args;
   }
 
-  // The tokens following --exec/-e, or the first bare command, are passed to
+  // The tokens following --/--exec/-e, or the first bare command, are passed to
   // Linux verbatim. Account for WSL options with a separate value before
   // locating that boundary, then insert --cd before it rather than accidentally
   // passing --cd to the shell or command.
   let commandIndex = -1;
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
-    if (arg === "--exec" || arg === "-e" || !arg.startsWith("-")) {
+    if (arg === "--" || arg === "--exec" || arg === "-e" || !arg.startsWith("-")) {
       commandIndex = index;
       break;
     }
-    if (arg === "--distribution" || arg === "-d" || arg === "--user" || arg === "-u") {
+    // Only WSL's directory option is explicit; a Linux command may itself
+    // accept --cd without changing the directory WSL starts in.
+    if (arg === "--cd" || arg.startsWith("--cd=")) return args;
+    if (
+      arg === "--distribution" || arg === "-d" || arg === "--distribution-id" ||
+      arg === "--user" || arg === "-u" || arg === "--shell-type"
+    ) {
       index += 1;
     }
   }
