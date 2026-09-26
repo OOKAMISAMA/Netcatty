@@ -15,6 +15,7 @@ test("terminal settings expose a bounded bar cursor width control", () => {
   assert.match(source, /min=\{1\}/);
   assert.match(source, /max=\{4\}/);
   assert.match(source, /value=\{terminalSettings\.cursorBarWidth\}/);
+  assert.match(source, /aria-label=\{t\("settings\.terminal\.cursor\.barWidth"\)\}/);
   assert.match(source, /updateTerminalSetting\("cursorBarWidth", parseInt\(e\.target\.value\)\)/);
 });
 

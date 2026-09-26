@@ -660,6 +660,7 @@ function SettingsTerminalTab(props: {
           <div className="flex items-center gap-2">
             <input
               type="range"
+              aria-label={t("settings.terminal.cursor.barWidth")}
               min={1}
               max={4}
               step={1}
