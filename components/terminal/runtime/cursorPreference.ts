@@ -6,6 +6,11 @@ import { normalizeCursorBarWidth } from "../../../domain/models/terminal";
 
 type CursorPreferenceSettings = Pick<TerminalSettings, "cursorShape" | "cursorBlink" | "cursorBarWidth">;
 
+export type CursorPreferenceSnapshot = Pick<
+  Required<CursorPreferenceSettings>,
+  "cursorShape" | "cursorBlink"
+>;
+
 type MutableCursorOptions = {
   cursorStyle?: "block" | "bar" | "underline";
   cursorBlink?: boolean;
@@ -54,6 +59,22 @@ export const resolveUserCursorPreference = (
   cursorBlink: settings?.cursorBlink ?? true,
   cursorBarWidth: normalizeCursorBarWidth(settings?.cursorBarWidth),
 });
+
+export const snapshotUserCursorPreference = (
+  settings: Partial<CursorPreferenceSettings> | undefined,
+): CursorPreferenceSnapshot => {
+  const { cursorShape, cursorBlink } = resolveUserCursorPreference(settings);
+  return { cursorShape, cursorBlink };
+};
+
+export const shouldApplyUserCursorPreference = (
+  previous: CursorPreferenceSnapshot | null,
+  current: CursorPreferenceSnapshot,
+): boolean => (
+  previous === null ||
+  previous.cursorShape !== current.cursorShape ||
+  previous.cursorBlink !== current.cursorBlink
+);
 
 export const applyUserCursorPreference = (
   term: TerminalLike,
