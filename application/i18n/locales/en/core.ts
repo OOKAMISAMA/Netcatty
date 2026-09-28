@@ -359,9 +359,6 @@ export const enCoreMessages: Messages = {
   'settings.vault.selectBeforeConnectDesc': 'Click once to select a host (accent highlight in grid view), click again to connect. Groups work the same way. Default remains single-click connect.',
   'settings.vault.showOnlyUngroupedHostsInRoot': 'Only show ungrouped hosts at root',
   'settings.vault.showOnlyUngroupedHostsInRootDesc': 'When enabled, the root host list only shows hosts without a group. Open a group from the sidebar to see grouped hosts.',
-  'settings.appearance.tabBarPosition': 'Tab bar position',
-  'settings.appearance.tabBarPosition.top': 'Top',
-  'settings.appearance.tabBarPosition.bottom': 'Bottom',
   'settings.vault.showSftpTab': 'Show SFTP tab',
   'settings.vault.showSftpTabDesc': 'Display the standalone SFTP view in the top tab bar. When hidden, use the in-session SFTP side panel instead.',
   'settings.vault.showHostTreeSidebar': 'Show host list sidebar',
@@ -710,7 +707,10 @@ Highlight the focused split pane:
     'Send configured text instead of normal Enter when pressing Shift+Enter in the terminal.',
   'settings.terminal.behavior.shiftEnterNewlineText': 'Text to send',
   'settings.terminal.behavior.shiftEnterNewlineText.desc':
-    'Use \\n for newline, \\t for tab, and \\\\ for backslash.',
+    'Use \\n for newline, \\t for tab, \\e for Escape, and \\\\ for backslash.',
+  'settings.terminal.behavior.shiftEnterForceText': 'Send text in Win32 input mode',
+  'settings.terminal.behavior.shiftEnterForceText.desc':
+    'Also send the text above when a local Windows ConPTY session negotiates Win32 input mode. Needed for Node/Bun CLIs (Claude Code, CodeBuddy) that cannot read modifier keys from console input records.',
   'settings.terminal.behavior.clearWipesScrollback': '`clear` wipes scrollback',
   'settings.terminal.behavior.clearWipesScrollback.desc':
     'Make `clear` also wipe the scrollback buffer (POSIX default). Disable to keep history visible after `clear`.',

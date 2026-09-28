@@ -1,7 +1,6 @@
-import { publishTerminalCommandCompletion } from "../../application/state/terminalCommandCompletion";
-import type { TerminalSettings } from "../../types";
 /* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps */
 import { useRef } from 'react';
+import type { TerminalSettings } from '../../types';
 import { publishPluginTerminalRuntimeLifecycleEvent } from '../../application/state/pluginTerminalRuntimeLifecycle';
 import { markTerminalCommandCompletionPending } from './runtime/promptLineBreak';
 import { resolveFontWeightBold } from '../../lib/fontWeightAvailability';
@@ -229,7 +228,6 @@ export function useTerminalEffects(ctx: TerminalEffectsContext) {
     void xtermRuntimeRef.current?.pluginProviderHost?.commandSubmitted(args[0]);
   };
   const pluginAwareOnCommandCompleted = () => {
-    publishTerminalCommandCompletion(sessionId);
     publishPluginTerminalRuntimeLifecycleEvent(pluginTerminalLifecycle, 'commandCompleted');
     void xtermRuntimeRef.current?.pluginProviderHost?.commandCompleted();
   };

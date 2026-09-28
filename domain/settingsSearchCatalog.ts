@@ -159,12 +159,6 @@ export const SETTINGS_SEARCH_CATALOG: readonly SettingsSearchEntry[] = [
     sectionKey: "settings.vault.title",
   },
   {
-    id: "appearance-tab-bar-position",
-    tab: "appearance",
-    labelKey: "settings.appearance.tabBarPosition",
-    sectionKey: "settings.vault.title",
-  },
-  {
     id: "appearance-vault-show-sftp-tab",
     tab: "appearance",
     labelKey: "settings.vault.showSftpTab",
@@ -391,6 +385,13 @@ export const SETTINGS_SEARCH_CATALOG: readonly SettingsSearchEntry[] = [
     tab: "terminal",
     labelKey: "settings.terminal.behavior.shiftEnterNewline",
     descriptionKey: "settings.terminal.behavior.shiftEnterNewline.desc",
+    sectionKey: "settings.terminal.section.behavior",
+  },
+  {
+    id: "terminal-shift-enter-force-text",
+    tab: "terminal",
+    labelKey: "settings.terminal.behavior.shiftEnterForceText",
+    descriptionKey: "settings.terminal.behavior.shiftEnterForceText.desc",
     sectionKey: "settings.terminal.section.behavior",
   },
   {

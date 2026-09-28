@@ -343,9 +343,6 @@ export const ruCoreMessages: Messages = {
   'settings.vault.selectBeforeConnectDesc': 'Один клик выбирает хост (акцентная рамка в сетке), повторный клик подключает. Группы работают так же. По умолчанию — подключение одним кликом.',
   'settings.vault.showOnlyUngroupedHostsInRoot': 'Показывать в корне только хосты без группы',
   'settings.vault.showOnlyUngroupedHostsInRootDesc': 'Если включено, в корневом списке хостов будут показаны только хосты без группы. Откройте группу на боковой панели, чтобы увидеть сгруппированные хосты.',
-  'settings.appearance.tabBarPosition': 'Расположение панели вкладок',
-  'settings.appearance.tabBarPosition.top': 'Сверху',
-  'settings.appearance.tabBarPosition.bottom': 'Снизу',
   'settings.vault.showSftpTab': 'Показывать вкладку SFTP',
   'settings.vault.showSftpTabDesc': 'Показывать отдельный SFTP-вид в верхней панели вкладок. Если скрыто, используйте боковую панель SFTP внутри сессии.',
   'settings.vault.showHostTreeSidebar': 'Показывать боковую панель хостов',
@@ -661,7 +658,10 @@ export const ruCoreMessages: Messages = {
     'Отправлять настроенный текст вместо обычного Enter при нажатии Shift+Enter в терминале.',
   'settings.terminal.behavior.shiftEnterNewlineText': 'Отправляемый текст',
   'settings.terminal.behavior.shiftEnterNewlineText.desc':
-    'Используйте \\n для перевода строки, \\t для табуляции и \\\\ для обратной косой черты.',
+    'Используйте \\n для перевода строки, \\t для табуляции, \\e для Escape и \\\\ для обратной косой черты.',
+  'settings.terminal.behavior.shiftEnterForceText': 'Отправлять текст и в режиме ввода Win32',
+  'settings.terminal.behavior.shiftEnterForceText.desc':
+    'Отправлять указанный выше текст даже когда локальная сессия Windows ConPTY согласует режим ввода Win32. Нужно для CLI на Node/Bun (Claude Code, CodeBuddy), которые не читают модификаторы из записей ввода консоли.',
   'settings.terminal.behavior.clearWipesScrollback': '`clear` очищает буфер прокрутки',
   'settings.terminal.behavior.clearWipesScrollback.desc':
     'Команда `clear` также будет очищать буфер прокрутки (поведение POSIX по умолчанию). Отключите, чтобы история оставалась видимой после `clear`.',
